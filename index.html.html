@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depósito Murilo | Materiais de Construção e Obra SJC</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fef2f2',
+                            100: '#ffe1e1',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #ffffff;
+            color: #0f172a;
+            line-height: 1.6;
+            letter-spacing: -0.011em;
+        }
+
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid #dc2626;
+            outline-offset: 2px;
+        }
+
+        .tab-btn {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .tab-active {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            border-color: rgba(226, 232, 240, 0.8) !important;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            height: 280px;
+        }
+
+        .logo-img {
+            object-fit: contain;
+            transition: opacity 0.2s ease;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800 bg-white">
+
+    <!-- Slim Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
+            <!-- Brand & Location -->
+            <div class="flex items-center gap-3 md:gap-4">
+                <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-slate-50 border border-slate-200/80 p-1">
+                    <img src="LOGO_MURILO-1-removebg-preview (1).png" 
+                         alt="Depósito Murilo" 
+                         class="h-7 w-auto logo-img"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23dc2626\'/><text x=\'50\' y=\'62\' font-family=\'Inter, sans-serif\' font-weight=\'700\' font-size=\'38\' fill=\'%23ffffff\' text-anchor=\'middle\'>DM</text></svg>';">
+                </div>
+                <div>
+                    <span class="font-bold text-slate-900 text-sm tracking-tight block leading-none">DEPÓSITO MURILO</span>
+                    <span class="text-[11px] font-medium text-slate-500 block leading-tight mt-0.5">Parque Nova Esperança · SJC</span>
+                </div>
+            </div>
+            
+            <!-- Header Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="https://www.instagram.com/depositomurilo/" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200/70 rounded-lg transition-colors">
+                    <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                    <span class="hidden sm:inline">@depositomurilo</span>
+                </a>
+                
+                <a href="https://wa.me/5512991292606" 
+                   class="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg transition-colors shadow-sm">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                    </svg>
+                    Orçamento Rápido
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-b from-slate-50 to-white py-12 md:py-20 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-10 items-center">
+                
+                <!-- Left Column: Copy & Actions -->
+                <div class="lg:col-span-7 flex flex-col items-start text-left">
+                    
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-700 text-xs font-medium mb-6">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse"></span>
+                        Parceiro do Construtor e Pedreiro em SJC
+                    </div>
+
+                    <!-- Main Headline -->
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight leading-[1.15] mb-6">
+                        Tudo para sua obra, <br class="hidden sm:inline">
+                        <span class="text-brand-600">do cimento ao acabamento.</span>
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="text-base sm:text-lg text-slate-600 font-normal leading-relaxed mb-8 max-w-2xl">
+                        Apoio completo para o seu canteiro de obras no Parque Nova Esperança. Orçamento ágil, pronta entrega e atendimento especializado para quem faz acontecer.
+                    </p>
+
+                    <!-- CTAs -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                        <a href="https://wa.me/5512991292606" 
+                           target="_blank"
+                           class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-sm transition-all text-center">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                            </svg>
+                            Pedir Orçamento no WhatsApp
+                        </a>
+                        
+                        <a href="https://www.instagram.com/depositomurilo/" 
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center justify-center gap-2 px-5 py-3.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all text-center">
+                            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                            Siga no Instagram
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Visual Showcase Photo Card -->
+                <div class="lg:col-span-5">
+                    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-sm relative overflow-hidden">
+                        
+                        <!-- Produtos reais em estoque (fotos de embalagem, não fachada) -->
+                        <div class="mb-5">
+                            <div class="grid grid-cols-4 gap-2">
+                                <div class="relative aspect-square rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
+                                    <img src="produtos/cimento-csn.jpg" alt="Cimento CSN CP II-F-32" class="w-full h-full object-contain p-1">
+                                </div>
+                                <div class="relative aspect-square rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
+                                    <img src="produtos/ligatex-argamassa-acii.jpg" alt="Argamassa Liga Tex ACII" class="w-full h-full object-contain p-1">
+                                </div>
+                                <div class="relative aspect-square rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
+                                    <img src="produtos/vedacit-bianco.jpg" alt="Vedacit Bianco" class="w-full h-full object-contain p-1">
+                                </div>
+                                <div class="relative aspect-square rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
+                                    <img src="produtos/tramontina-alicate.jpg" alt="Alicate Tramontina" class="w-full h-full object-contain p-1">
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-2 text-center">Exemplos de produtos com estoque na loja</p>
+                        </div>
+
+                        <div class="flex items-center gap-3 mb-4 pb-4 border-b border-slate-100">
+                            <div class="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center p-1.5 shrink-0">
+                                <img src="LOGO_MURILO-1-removebg-preview (1).png" 
+                                     alt="Logo Murilo" 
+                                     class="h-9 w-auto object-contain logo-img"
+                                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23dc2626\'/><text x=\'50\' y=\'62\' font-family=\'Inter, sans-serif\' font-weight=\'700\' font-size=\'38\' fill=\'%23ffffff\' text-anchor=\'middle\'>DM</text></svg>';">
+                            </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900 leading-snug">Atendimento Direto do Balcão</h2>
+                                <p class="text-xs text-slate-500 mt-0.5">Materiais com garantia de procedência na Zona Leste de SJC.</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-2.5">
+                            <li class="flex items-start gap-2.5 text-xs text-slate-700">
+                                <div class="w-4 h-4 rounded bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+                                </div>
+                                <span><strong>Cimento & Estrutura:</strong> CP-II, CP-III, vergalhões CA-50, treliças e blocos.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-xs text-slate-700">
+                                <div class="w-4 h-4 rounded bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+                                </div>
+                                <span><strong>Hidráulica & Tubos:</strong> Tubos para esgoto, água fria, registros e conexões.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-xs text-slate-700">
+                                <div class="w-4 h-4 rounded bg-brand-50 border border-brand-100 text-brand-600 flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+                                </div>
+                                <span><strong>Elétrica & Ferramentas:</strong> Fios certificados, disjuntores e discos de corte.</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                            <span class="flex items-center gap-1.5 font-medium text-slate-700">
+                                <svg class="w-4 h-4 text-amber-500 fill-amber-500" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                4.5 estrelas no Google
+                            </span>
+                            <span>118+ avaliações reais</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="py-8 bg-slate-50/70 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                
+                <div class="p-3">
+                    <p class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">4.5 / 5</p>
+                    <p class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Google Rating</p>
+                </div>
+                
+                <div class="p-3 border-l border-slate-200/60">
+                    <p class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">33 Anos</p>
+                    <p class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Tradição em SJC</p>
+                </div>
+                
+                <div class="p-3 border-l border-slate-200/60">
+                    <p class="text-2xl sm:text-3xl font-bold text-brand-600 tracking-tight">SJC</p>
+                    <p class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Região Leste</p>
+                </div>
+                
+                <div class="p-3 border-l border-slate-200/60">
+                    <p class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">07:30h</p>
+                    <p class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Abertura Seg a Sáb</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabbed Catalog -->
+    <section class="py-16 md:py-20 bg-white border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="max-w-2xl mb-10">
+                <span class="text-xs font-semibold text-brand-600 uppercase tracking-wider block mb-2">Catálogo Prático</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                    Materiais Selecionados para a Sua Obra
+                </h2>
+                <p class="text-sm text-slate-600 mt-2">
+                    Escolha a fase da construção e solicite a cotação diretamente via WhatsApp.
+                </p>
+            </div>
+
+            <!-- Segmented Control Navigation Tabs -->
+            <div class="inline-flex flex-wrap p-1.5 bg-slate-100/80 rounded-xl mb-8 gap-1 border border-slate-200/60 w-full sm:w-auto">
+                <button onclick="switchTab('pedreiro')" id="btn-pedreiro" class="tab-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 transition-all tab-active">
+                    Bruto & Estrutura
+                </button>
+                <button onclick="switchTab('acabamento')" id="btn-acabamento" class="tab-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    Acabamento & Reforma
+                </button>
+                <button onclick="switchTab('hidraulica')" id="btn-hidraulica" class="tab-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    Hidráulica & Tubos
+                </button>
+                <button onclick="switchTab('eletrica')" id="btn-eletrica" class="tab-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 transition-all">
+                    Elétrica & Ferramentas
+                </button>
+            </div>
+
+            <!-- Content Card -->
+            <div class="bg-slate-50/50 rounded-2xl p-6 sm:p-8 border border-slate-200/80 min-h-[420px]">
+                <div id="display-area" class="grid lg:grid-cols-2 gap-8 items-center w-full">
+                    <!-- JavaScript dynamically injects content with photos -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Social & Visual Photo Showcase Section -->
+    <section class="py-16 md:py-20 bg-white border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span class="text-xs font-semibold text-brand-600 uppercase tracking-wider block mb-2">Dia a Dia da Loja</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                        Acompanhe no Instagram <a href="https://www.instagram.com/depositomurilo/" target="_blank" class="text-brand-600 hover:underline">@depositomurilo</a>
+                    </h2>
+                    <p class="text-sm text-slate-600 mt-1">
+                        Cargas novas, estoque atualizado e o atendimento que você já conhece no Parque Nova Esperança.
+                    </p>
+                </div>
+                <a href="https://www.instagram.com/depositomurilo/" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200/80 rounded-xl transition-colors shrink-0">
+                    <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                    Seguir Perfil Oficial
+                </a>
+            </div>
+
+            <!-- TROCAR: sem prints reais do Instagram ainda — quando tiver,
+                 monte aqui uma grade 2x4 com os posts de verdade. Por ora,
+                 deixei só o link, sem foto genérica de banco de imagens. -->
+            <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50/50 p-8 text-center mb-12">
+                <p class="text-sm text-slate-500 mb-3">Prints dos posts reais do Instagram entram aqui quando você mandar.</p>
+                <a href="https://www.instagram.com/depositomurilo/" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">
+                    Ver perfil @depositomurilo
+                </a>
+            </div>
+
+            <!-- Testimonial & Data Chart Split Grid -->
+            <div class="grid lg:grid-cols-12 gap-10 items-center">
+                
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="p-6 bg-slate-50 rounded-xl border border-slate-200/80">
+                        <div class="flex items-center gap-1 text-amber-500 mb-3">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        </div>
+                        <p class="text-sm text-slate-700 italic leading-relaxed">
+                            "Sempre que vou subir parede ou fazer reforma na Zona Leste, compro no Murilo. Cimento e ferro com o melhor preço e entrega rápida de SJC."
+                        </p>
+                        <p class="text-xs font-semibold text-slate-900 mt-3">
+                            — Cliente verificado de São José dos Campos
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Google Rating Chart Card -->
+                <div class="lg:col-span-6">
+                    <div class="bg-slate-900 text-white p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-sm">
+                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                            <div>
+                                <h3 class="text-base font-bold text-white tracking-tight">Avaliações dos Clientes</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Satisfação comprovada no Google</p>
+                            </div>
+                            <span class="text-2xl font-bold text-brand-500">4.5 / 5</span>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="satisfactionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Location Section -->
+    <section class="py-16 md:py-20 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Info Column -->
+                <div class="lg:col-span-6 space-y-8">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center p-1">
+                                <img src="LOGO_MURILO-1-removebg-preview (1).png" 
+                                     alt="Logo Murilo Footer" 
+                                     class="h-6 w-auto object-contain logo-img"
+                                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23dc2626\'/><text x=\'50\' y=\'62\' font-family=\'Inter, sans-serif\' font-weight=\'700\' font-size=\'38\' fill=\'%23ffffff\' text-anchor=\'middle\'>DM</text></svg>';">
+                            </div>
+                            <span class="font-bold text-white text-base tracking-tight">DEPÓSITO MURILO</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            Atendimento Local no Parque Nova Esperança
+                        </h2>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-300">
+                        <!-- Address -->
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 mt-0.5 text-brand-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-white">Endereço:</p>
+                                <p class="text-slate-300 mt-0.5">Av. Carlos Alberto de Andrade Silva, 24</p>
+                                <p class="text-slate-400 text-xs">Parque Nova Esperança, São José dos Campos - SP</p>
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 mt-0.5 text-brand-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-white">Telefones para Contato:</p>
+                                <p class="text-slate-300 mt-0.5 font-medium">(12) 3907-1991 · Fixo</p>
+                                <p class="text-brand-500 font-semibold">(12) 99129-2606 · WhatsApp</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hours Card -->
+                    <div class="p-5 bg-slate-800/60 rounded-xl border border-slate-700/60">
+                        <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+                            <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            Horário de Funcionamento
+                        </div>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <div class="flex justify-between text-slate-300">
+                                <span>Segunda a Sexta-feira:</span>
+                                <span class="font-semibold text-white">07:30 às 18:00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-300">
+                                <span>Sábado:</span>
+                                <span class="font-semibold text-white">07:30 às 14:30</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=Dep%C3%B3sito+Murilo+Av.+Carlos+Alberto+de+Andrade+Silva+24+S%C3%A3o+Jos%C3%A9+dos+Campos')" 
+                                class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition-colors">
+                            <svg class="w-3.5 h-3.5 text-brand-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 15 22 22 18 22 2 15 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="15" y1="6" x2="15" y2="22"></line></svg>
+                            Abrir rota no Google Maps
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Map Column -->
+                <!-- TROCAR: quando tiver uma foto real da fachada, cole aqui
+                     em cima do mapa, no mesmo estilo do card acima. -->
+                <div class="lg:col-span-6 space-y-4">
+                    <!-- Embedded Google Map -->
+                    <div class="w-full h-80 sm:h-[26rem] rounded-xl overflow-hidden border border-slate-800 shadow-md">
+                        <iframe 
+                            title="Mapa de Localização do Depósito Murilo"
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            loading="lazy" 
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                            src="https://maps.google.com/maps?q=Av.+Carlos+Alberto+de+Andrade+Silva,+24+-+Parque+Nova+Esperan%C3%A7a,+S%C3%A3o+Jos%C3%A9+dos+Campos+-+SP&t=&z=16&ie=UTF8&iwloc=&output=embed">
+                        </iframe>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Minimal Footer -->
+    <footer class="bg-slate-950 py-8 border-t border-slate-900 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; 2024 Depósito Murilo — Ferragens e Materiais de Construção em São José dos Campos</p>
+        </div>
+    </footer>
+
+    <!-- Fixed WhatsApp Action Button -->
+    <a href="https://wa.me/5512991292606" 
+       target="_blank"
+       aria-label="Contatar Depósito Murilo via WhatsApp"
+       class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2.5 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+        </svg>
+        <span class="hidden sm:inline">WhatsApp Balcão</span>
+    </a>
+
+    <script>
+        // Catalog data dictionary (including image visual representations)
+        const catalog = {
+            pedreiro: {
+                title: "Estrutura & Bruto",
+                desc: "Cimento, vergalhões, treliças e argamassa. Tudo o que o pedreiro precisa para subir a parede e bater a laje sem atrasar o cronograma.",
+                imgs: [
+                    { src: "produtos/cimento-csn.jpg", label: "Cimento CSN CP II-F-32" },
+                    { src: "produtos/calgeo-plastificante.jpg", label: "Calgeo Plastificante" },
+                    { src: "produtos/vedacit-bianco.jpg", label: "Vedacit Bianco" }
+                ],
+                list: ["Cimento (CP-II e CP-III)", "Vergalhões CA-50 e Treliças", "Argamassas AC-I, AC-II e AC-III", "Tijolos, Blocos e Canaletas", "Impermeabilizantes e Vedacit"],
+                msg: "Olá! Gostaria de cotar materiais brutos para minha obra (cimento, ferro, argamassa)."
+            },
+            acabamento: {
+                title: "Acabamento & Reforma",
+                desc: "Impermeabilizantes, tintas, rejunte e selantes para dar o acabamento perfeito e garantir zero infiltração na sua reforma.",
+                imgs: [
+                    { src: "produtos/ligatex-argamassa-acii.jpg", label: "Liga Tex Argamassa ACII" },
+                    { src: "produtos/ligatex-argamassa-aciii.jpg", label: "Liga Tex Argamassa ACIII" },
+                    { src: "produtos/ligatex-colante-aci.jpg", label: "Liga Tex Colante ACI" },
+                    { src: "produtos/quartzolit-cimentcola.jpg", label: "Quartzolit Cimentcola" }
+                ],
+                list: ["Rejuntes e Colas de Porcelanato", "Seladores, Tintas e Massa Corrida", "Mantas Líquidas e Mastic", "Sacos de Ráfia, Lonas e Lixas", "Desempenadeiras e Espátulas"],
+                msg: "Olá! Preciso de cotação de materiais para acabamento, rejunte e pintura."
+            },
+            hidraulica: {
+                title: "Hidráulica & Tubos",
+                desc: "Linha completa de tubos de esgoto, água fria, registros e caixas d'água das melhores marcas para evitar vazamentos.",
+                imgs: [
+                    { src: "produtos/caixa-dagua-fortlev.jpg", label: "Caixa d'Água Fortlev" },
+                    { src: "produtos/registro-esfera-viqua.jpg", label: "Registro de Esfera Viqua" },
+                    { src: "produtos/sifao-extensivel.jpg", label: "Sifão Extensível" },
+                    { src: "produtos/fita-veda-rosca-gool.jpg", label: "Fita Veda Rosca Gool" }
+                ],
+                list: ["Tubos e Conexões de Esgoto e Água", "Caixas d'Água e Registros de Esfera", "Sifões, Torneiras e Válvulas", "Caixas de Gordura e Passagem", "Fita Rosca e Colas para PVC"],
+                msg: "Olá! Gostaria de um orçamento de materiais hidráulicos e tubos."
+            },
+            eletrica: {
+                title: "Elétrica & Ferramentas",
+                desc: "Fios certificados, disjuntores, caixas de luz e as ferramentas mais resistentes para o canteiro de obras.",
+                imgs: [
+                    { src: "produtos/tramontina-alicate.jpg", label: "Alicate Universal Tramontina" },
+                    { src: "produtos/conduite-corrugado-fortlev.jpg", label: "Eletroduto Corrugado Fortlev" },
+                    { src: "produtos/disjuntor-steck.jpg", label: "Disjuntor DIN Steck" },
+                    { src: "produtos/colher-pedreiro-ostherman.jpg", label: "Colher de Pedreiro Ostherman" },
+                    { src: "produtos/disco-corte-la-torre.jpg", label: "Disco de Corte La Torre" }
+                ],
+                list: ["Fios e Cabos Flexíveis Anti-Chama", "Conduítes e Caixas de Luz 4x2", "Disjuntores DIN e Quadros", "Colheres de Pedreiro, Trenas e Prumos", "Discos de Corte para Piso e Concreto"],
+                msg: "Olá! Preciso orçar fios, materiais elétricos e ferramentas para a obra."
+            }
+        };
+
+        // Tab switcher function
+        function switchTab(id) {
+            const tabs = ['pedreiro', 'acabamento', 'hidraulica', 'eletrica'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`btn-${t}`);
+                if (btn) btn.classList.remove('tab-active');
+            });
+            const activeBtn = document.getElementById(`btn-${id}`);
+            if (activeBtn) activeBtn.classList.add('tab-active');
+
+            const data = catalog[id];
+            const area = document.getElementById('display-area');
+            if (!area) return;
+
+            area.innerHTML = `
+                <div class="space-y-6">
+                    <div>
+                        <span class="text-xs font-semibold text-brand-600 uppercase tracking-wider block mb-1">Categoria em Destaque</span>
+                        <h3 class="text-2xl font-bold text-slate-900 tracking-tight mb-3">${data.title}</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">${data.desc}</p>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Itens Frequentes em Estoque</p>
+                        ${data.list.map(item => `
+                            <div class="flex items-center gap-3 p-3 bg-white border border-slate-200/80 rounded-xl hover:border-slate-300 transition-colors">
+                                <div class="w-5 h-5 rounded-md bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+                                </div>
+                                <span class="text-xs sm:text-sm font-medium text-slate-800">${item}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button onclick="window.open('https://wa.me/5512991292606?text=${encodeURIComponent(data.msg)}')" 
+                                class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors shadow-sm">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                            Cotar no WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                ${data.imgs && data.imgs.length > 0 ? `
+                <div class="grid ${data.imgs.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-3 content-start">
+                    ${data.imgs.map(p => `
+                        <div class="rounded-xl border border-slate-200/80 bg-white p-3 flex flex-col items-center text-center shadow-sm">
+                            <img src="${p.src}" alt="${p.label}" class="h-32 sm:h-36 w-full object-contain mb-2">
+                            <span class="text-[11px] font-medium text-slate-600">${p.label}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                ` : `
+                <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50/50 flex items-center justify-center text-center p-8 text-xs text-slate-400 min-h-[200px]">
+                    Fotos dos produtos de hidráulica em breve
+                </div>
+                `}
+            `;
+        }
+
+        // Initialize Chart.js with clean design guidelines
+        function initChart() {
+            const canvas = document.getElementById('satisfactionChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['ATENDIMENTO', 'PREÇO', 'ESTOQUE', 'ENTREGA'],
+                    datasets: [{
+                        data: [98, 92, 95, 94],
+                        backgroundColor: '#ef4444',
+                        borderRadius: 6,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Inter', size: 12, weight: '600' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            padding: 10,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        x: { display: false, max: 100 },
+                        y: { 
+                            grid: { display: false },
+                            ticks: { 
+                                color: '#94a3b8', 
+                                font: { family: 'Inter', weight: '500', size: 11 } 
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Lifecycle hook
+        window.onload = () => {
+            switchTab('pedreiro');
+            initChart();
+        };
+    </script>
+</body>
+</html>
